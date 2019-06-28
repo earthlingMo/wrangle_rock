@@ -1,0 +1,152 @@
+---
+title: "wranglerock"
+author: "mstendel"
+date: "6/26/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# set working directory
+knitr::opts_knit$set(root.dir = "/Users/chavezlabadmin/Documents/rockland_behavior")
+
+#install packages
+library(rio)
+library(tidyverse)
+library(plyr)
+library(dplyr)
+library(data.table)
+library(reshape)
+```
+
+This code will extract the relevant data from rockland csv files for measures of interest to create a final document containing itemized measures (when extant), total scores, and for whom what data exists.
+
+## create function to turn first row of data into colnames
+
+We will need to use this later. 
+
+```{r column name creation}
+header.true <- function(df){
+  names(df) <-as.character(unlist(df[1,]))
+  df[-1,]
+}
+
+```
+
+## affixation script
+
+### import data sets of interest
+
+load in data:
+``` {r }
+
+# these are the datasets i am interested in but can be changed to whatever suits your fancy
+# this import process is clunky, if someone can make it better please help
+
+df_1 <- import("Demos/8100_Demos_20190312.csv") #demographics
+df_2 <- import("Age/8100_Age_20190312.csv") #age
+df_3 <- import("ASSQ/8100_ASSQ_20190312.csv") #high-functioning autism spectrum questionnaire
+df_4 <- import("ATQ/8100_ATQ_20190312.csv")  #adult temperament measure
+df_5 <- import("ATQ/8100_ATQ_20190312.csv") #beck depression inventory 2
+df_6 <- import("Bird/8100_Bird_20190312.csv") #behavioural index of resiliency to stress
+df_7 <- import("Diagnostic_Summary/8100_Diagnostic_Summary_20190312.csv") # do they meet criteria for DSM-IV diagnosis? 
+df_8 <- import("DOSPERT/8100_DOSPERT_20190314.csv") #domain specific risk taking (specifically interested in social domain)
+df_9 <- import("Dot_Probe/8100_Dot_Probe_20190314.csv") #dot probe (measure of selective attention to threatening stim)
+df_10 <- import("EHQ/8100_EHQ_20190314.csv") #handedness - maybe important for brain data?? 
+df_11 <- import("ERQ/8100_ERQ_20190314.csv") #emotional regulation index
+df_12 <- import("IRI/8100_IRI_20190314.csv") # interpersonal reactivity index 
+df_13 <- import("ANT/8100_ANT_20190312.csv") #attention network task
+df_14 <- import("MRI_LS/8100_MRI_Log_Sheet_20190314.csv") #log of mri information
+df_15 <- import("NEO-FFI-3/8100_NEO-FFI-3_20190314.csv") #big five inventory
+df_16 <- import("NIDA/8100_NIDA_(3-19-13)_20190314.csv") #brief self report on drug use  
+df_17 <- import("PSWQ/8100_PSWQ_20190314.csv") # penn state worry questionnaire
+df_18 <- import("PTQ/8100_PTQ_20190314.csv") #perservative thinking questionnaire
+df_19 <- import("RRS/8100_RRS_20190314.csv") #ruminative response scale 
+df_20 <- import("Social_Network/8100_Social_Network_20190314.csv") #social networking questionnaire
+df_21 <- import("STAI/8100_STAI_20190314.csv") #state trait anxiety
+df_22 <- import("TSC-40/8100_TSC-40_20190314.csv") #trauma symptoms - adult
+df_23 <- import("TSC-C/8100_TSC-C_20190314.csv") #trauma symptoms - child
+df_24 <- import("AIM/8100_AIM_20190308.csv") #affect intensity measure
+df_25 <- import("ASR/8100_ASR_20190312.csv") #self report (clinical measures) - ADULT
+df_26 <- import("YSR/8100_YSR_20190314.csv") #self report (clinical measures) - YOUTH
+
+#change this number depending on how many data sets you have -- here, we have 27
+num_of_data_sets <- 26
+
+#create a list of all the data files you imported
+df_list <- lapply(paste('df_', seq(1, num_of_data_sets), sep=''), get)
+
+#remove the columns we don't care about ("Subject Type", "Sub Study Label", "Days since first enrollment", "Days since sub study enrollment"))
+df_list <- lapply(df_list, function(x) x[-c(2,3,4,6)])
+
+
+```
+
+## create variable key
+
+``` {r}
+# define function "make.key" to create key for any data file 
+key_temp <- NA
+key_file <- NA
+make.key <- function(df){
+  key <- matrix((df[1,]), ncol=1)
+  colnames(key) = "key"
+  item <- as.vector(colnames(df))
+  key_temp <<- cbind(key, item)
+  key_file <<- rbind(key_temp, key_file) 
+}
+
+# get key for each individual data file and store in one list, key_file
+lapply(df_list, make.key)
+
+#remove duplicate rows in key file
+key_file <- key_file %>% 
+  unique()
+key_file <- as.data.frame(key_file)
+rownames(key_file) <- seq(1, nrow(key_file))
+
+#save to csv  
+fwrite(key_file, file ="rockland_key.csv")
+```
+
+## create basefile
+
+this will get a list of every participant at every visit to create a base file which we can affix other data to. 
+
+```{r}
+
+#set up empty variables
+subjects <- NA
+temp_col <- NA
+
+#create function to get the columns of each data frame and bind to a list of subjects
+get.columns <- function(df){
+  id <- matrix((df[,1]), ncol = 1)
+  visit <- matrix((df[, "Visit"]))
+  temp_col <<- cbind(id,visit)
+  subjects <<- rbind(temp_col,subjects) %>% 
+    unique()
+}
+
+#apply above function to all dataframes of interest - this will be a base file of all subjects and visits
+lapply(df_list, get.columns) 
+dataset <- as.data.frame(subjects)
+dataset <- header.true(dataset)
+rownames(dataset) <- seq(1, nrow(dataset))
+  
+```
+
+
+### affix data from each dataset to correct participant and visit
+
+```{r}
+
+# use first row of data in all sets as the column names
+df_list <- lapply(df_list, header.true)
+
+#merge data by id & visit
+
+final_data <- merge_recurse(df_list, by = c('ID', 'VISIT'))
+```
+
