@@ -150,3 +150,34 @@ df_list <- lapply(df_list, header.true)
 final_data <- merge_recurse(df_list, by = c('ID', 'VISIT'))
 ```
 
+### check if dti data exists for this participant
+```{r}
+
+dti <- as.data.frame(list.files(path = "/Users/chavezlabadmin/Documents/rockland_data/FA_ANTs_collection"))
+colnames(dti) <- "dti_filename"
+ID <- substr(dti$dti_filename, 1, 9)
+
+dti <- cbind(dti, ID)  
+
+#add dti file name -- 
+# need to find out what session they did DTI on, though!! not sorted by visit #. where is this info?
+final_data <- left_join(final_data, dti, by = "ID")
+
+#add a DTI yes/no column
+final_data$has_dti <- NA
+
+for (row in range(1, nrow(final_data))){
+  if (is.na(final_data[row, "dti_filename"])){
+    final_data[row, "has_dti"] <- 0
+  }
+    else {
+    final_data[row, "has_dti"] <- 1
+    }
+  }
+
+``` 
+
+### write the data to a CSV
+```{r}
+fwrite(final_data, file= "wrangled_behav_data.csv")
+``` 
