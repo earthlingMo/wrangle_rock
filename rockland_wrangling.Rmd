@@ -149,6 +149,16 @@ df_list <- lapply(df_list, header.true)
 
 final_data <- merge_recurse(df_list, by = c('ID', 'VISIT'))
 ```
+### combine age data across multiple vars
+
+```{r}
+for (row in 1:nrow(final_data)){
+  if (is.na(final_data[row,'AGE_04'])){
+    final_data[row,'AGE_04'] <- final_data[row, 'DEM_001']
+  }
+}
+
+```
 
 ### check if dti data exists for this participant
 ```{r}
@@ -166,7 +176,7 @@ final_data <- left_join(final_data, dti, by = "ID")
 #add a DTI yes/no column
 final_data$has_dti <- NA
 
-for (row in range(1, nrow(final_data))){
+for (row in 1:nrow(final_data)){
   if (is.na(final_data[row, "dti_filename"])){
     final_data[row, "has_dti"] <- 0
   }
