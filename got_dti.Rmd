@@ -1,0 +1,105 @@
+---
+title: "got_dti?"
+author: "moriahstendel"
+date: "7/3/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(rio)
+library(tidyverse)
+library(plyr)
+library(dplyr)
+library(data.table)
+library(reshape)
+
+knitr::opts_knit$set(root.dir = "~/Documents/rockland_behavior")
+```
+
+Does DTI data exist for the measures we are interested in?
+
+### Import Data
+```{r}
+data <- import("wrangled_behav_data.csv")
+```
+
+### Measures of interest
+
+* demographics
+* age (16+)
+* asq
+* temperament
+* bdi
+* stress resiliency
+* risk taking
+* dot probe
+* emotional regulation
+* interpersonal reactivity
+* attention network task
+* big five
+* drug use
+* worry
+* perservative thinking
+* rumination
+* social networking
+* stai
+* trauma - adult
+* trauma - child
+* affect
+* self report - adult
+* self report - youth
+
+### Get correct age range
+
+```{r}
+
+# add new age column to combine age from multiple csvs
+# if the calculated age column is empty, pull from the demographics questionnaire (from same visit)
+
+for (row in 1:nrow(data)){
+  if (is.na(data[row,'AGE_04'])){
+    data[row,'AGE_04'] <- data[row, 'DEM_001']
+  }
+}
+
+# select individuals between 16 and 60
+data <- subset(data, DEM_001>16 & DEM_001 < 60)
+
+```
+
+### Remove rows without DTI data
+
+```{r}
+data <- subset(data, has_dti ==1)
+
+```
+
+### count data points for measures of interest
+
+```{r}
+length(which(!is.na(data$ASSQ_05))) # 17, autism spectrum quotient
+length(which(!is.na(data$ATQ_02))) # 88, temperament
+length(which(!is.na(data$BIR_3))) #235, resiliency to distress
+length(which(!is.na(data$DOSP_02))) #69, social risk taking
+length(which(!is.na(data$DOT_02))) #6, dot probe task
+length(which(!is.na(data$IPRI_02))) #81, interpersonal reactivity index 
+length(which(!is.na(data$ANT_02))) #469, attention network task
+length(which(!is.na(data$NEOFFI_02))) #451, big five
+length(which(!is.na(data$NIDA_02))) #83, drug use
+length(which(!is.na(data$CCDPSWQ_02))) #1, penn worry questionnaire
+length(which(!is.na(data$CCDERQ_02))) #1, emotional reactivity index
+length(which(!is.na(data$PTQ_002))) #1, perservative thinking questionnnaire
+length(which(!is.na(data$RRS_002))) #1, ruminative response scale
+length(which(!is.na(data$SOCIAL_02))) #467, social network questionnaire
+length(which(!is.na(data$DSEQ_02))) #451, State Trait Anxiety
+length(which(!is.na(data$TSC40_02))) #447, trauma questionnaire scale, adult
+length(which(!is.na(data$TSCC_02))) #14, trauma questionnaire child 
+length(which(!is.na(data$CCDAIM_02))) #1, affect intensity measure 
+length(which(!is.na(data$ASRM_02))) #84, youth self-report
+length(which(!is.na(data$YSR_02))) #12, #98 total for self-report
+length(which(!is.na(data$DBDI_02))) #84
+
+```
+
