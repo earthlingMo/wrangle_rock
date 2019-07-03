@@ -71,11 +71,11 @@ df_24 <- import("AIM/8100_AIM_20190308.csv") #affect intensity measure
 df_25 <- import("ASR/8100_ASR_20190312.csv") #self report (clinical measures) - ADULT
 df_26 <- import("YSR/8100_YSR_20190314.csv") #self report (clinical measures) - YOUTH
 
+#how many data sets you have, here 26
+num_of_data_sets <- 26
+
 #create a list of all the data files you imported
 df_list <- lapply(paste('df_', seq(1, num_of_data_sets), sep=''), get)
-
-#how many data sets you have
-num_of_data_sets <- length(df_list)
 
 #remove the columns we don't care about ("Subject Type", "Sub Study Label", "Days since first enrollment", "Days since sub study enrollment"))
 df_list <- lapply(df_list, function(x) x[-c(2,3,4,6)])
