@@ -160,10 +160,10 @@ for (row in 1:nrow(final_data)){
 
 ```
 
-### check if dti data exists for this participant
+### check if GOOD dti data exists for this participant
 ```{r}
 
-dti <- as.data.frame(list.files(path = "/Users/chavezlabadmin/Documents/rockland_data/FA_ANTs_collection"))
+dti <- as.data.frame(read.csv("good_dti_subs.csv")
 colnames(dti) <- "dti_filename"
 ID <- substr(dti$dti_filename, 1, 9)
 
