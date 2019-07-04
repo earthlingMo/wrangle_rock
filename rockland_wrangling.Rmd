@@ -163,7 +163,7 @@ for (row in 1:nrow(final_data)){
 ### check if GOOD dti data exists for this participant
 ```{r}
 
-dti <- as.data.frame(import("good_dti_subs.csv")
+dti <- as.data.frame(import("good_dti_subs.csv"))
 colnames(dti) <- "dti_filename"
 ID <- substr(dti$dti_filename, 1, 9)
 
