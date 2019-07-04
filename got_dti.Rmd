@@ -69,13 +69,12 @@ data <- subset(data, DEM_001>16 & DEM_001 < 69)
 
 ```
 
-### Remove rows without DTI data
+### remove rows without DTI data
 
 ```{r}
 data <- subset(data, has_dti ==1)
 
 ```
-
 ### count data points for measures of interest
 
 ```{r}
@@ -95,7 +94,7 @@ length(which(!is.na(data$RRS_002))) #ruminative response scale
 length(which(!is.na(data$SOCIAL_02))) #social network questionnaire
 length(which(!is.na(data$DSEQ_02))) #State Trait Anxiety
 length(which(!is.na(data$TSC40_02))) #trauma questionnaire scale, adult
-length(which(!is.na(data$TSCC_02))) #trauma questionnaire child 
+length(which(!is.na(data$TSCC_03))) #trauma questionnaire child 
 length(which(!is.na(data$CCDAIM_02))) #affect intensity measure 
 length(which(!is.na(data$ASRM_02))) #adult self-report
 length(which(!is.na(data$YSR_02))) #youth self-report
