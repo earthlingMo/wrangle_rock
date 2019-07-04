@@ -64,8 +64,8 @@ for (row in 1:nrow(data)){
   }
 }
 
-# select individuals between 16 and 60
-data <- subset(data, DEM_001>16 & DEM_001 < 60)
+# select individuals between 16 and 69
+data <- subset(data, DEM_001>16 & DEM_001 < 69)
 
 ```
 
