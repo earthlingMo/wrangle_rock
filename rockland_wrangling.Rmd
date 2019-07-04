@@ -48,7 +48,7 @@ df_1 <- import("Demos/8100_Demos_20190312.csv") #demographics
 df_2 <- import("Age/8100_Age_20190312.csv") #age
 df_3 <- import("ASSQ/8100_ASSQ_20190312.csv") #high-functioning autism spectrum questionnaire
 df_4 <- import("ATQ/8100_ATQ_20190312.csv")  #adult temperament measure
-df_5 <- import("ATQ/8100_ATQ_20190312.csv") #beck depression inventory 2
+df_5 <- import("BDI-II/8100_BDI-II_20190312.csv") #beck depression inventory 2
 df_6 <- import("Bird/8100_Bird_20190312.csv") #behavioural index of resiliency to stress
 df_7 <- import("Diagnostic_Summary/8100_Diagnostic_Summary_20190312.csv") # do they meet criteria for DSM-IV diagnosis? 
 df_8 <- import("DOSPERT/8100_DOSPERT_20190314.csv") #domain specific risk taking (specifically interested in social domain)
