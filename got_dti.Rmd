@@ -79,27 +79,27 @@ data <- subset(data, has_dti ==1)
 ### count data points for measures of interest
 
 ```{r}
-length(which(!is.na(data$ASSQ_05))) # 17, autism spectrum quotient
-length(which(!is.na(data$ATQ_02))) # 88, temperament
-length(which(!is.na(data$BIR_3))) #235, resiliency to distress
-length(which(!is.na(data$DOSP_02))) #69, social risk taking
-length(which(!is.na(data$DOT_02))) #6, dot probe task
-length(which(!is.na(data$IPRI_02))) #81, interpersonal reactivity index 
-length(which(!is.na(data$ANT_02))) #469, attention network task
-length(which(!is.na(data$NEOFFI_02))) #451, big five
-length(which(!is.na(data$NIDA_02))) #83, drug use
-length(which(!is.na(data$CCDPSWQ_02))) #1, penn worry questionnaire
-length(which(!is.na(data$CCDERQ_02))) #1, emotional reactivity index
-length(which(!is.na(data$PTQ_002))) #1, perservative thinking questionnnaire
-length(which(!is.na(data$RRS_002))) #1, ruminative response scale
-length(which(!is.na(data$SOCIAL_02))) #467, social network questionnaire
-length(which(!is.na(data$DSEQ_02))) #451, State Trait Anxiety
-length(which(!is.na(data$TSC40_02))) #447, trauma questionnaire scale, adult
-length(which(!is.na(data$TSCC_02))) #14, trauma questionnaire child 
-length(which(!is.na(data$CCDAIM_02))) #1, affect intensity measure 
-length(which(!is.na(data$ASRM_02))) #84, youth self-report
-length(which(!is.na(data$YSR_02))) #12, #98 total for self-report
-length(which(!is.na(data$DBDI_02))) #84
+length(which(!is.na(data$ASSQ_05))) #autism spectrum quotient
+length(which(!is.na(data$ATQ_02))) #temperament
+length(which(!is.na(data$BIR_3))) #resiliency to distress
+length(which(!is.na(data$DOSP_02))) #social risk taking
+length(which(!is.na(data$DOT_02))) #dot probe task
+length(which(!is.na(data$IPRI_02))) #interpersonal reactivity index 
+length(which(!is.na(data$ANT_02))) #attention network task
+length(which(!is.na(data$NEOFFI_02))) #big five
+length(which(!is.na(data$NIDA_02))) #drug use
+length(which(!is.na(data$CCDPSWQ_02))) #penn worry questionnaire
+length(which(!is.na(data$CCDERQ_02))) #emotional reactivity index
+length(which(!is.na(data$PTQ_002))) #perservative thinking questionnnaire
+length(which(!is.na(data$RRS_002))) #ruminative response scale
+length(which(!is.na(data$SOCIAL_02))) #social network questionnaire
+length(which(!is.na(data$DSEQ_02))) #State Trait Anxiety
+length(which(!is.na(data$TSC40_02))) #trauma questionnaire scale, adult
+length(which(!is.na(data$TSCC_02))) #trauma questionnaire child 
+length(which(!is.na(data$CCDAIM_02))) #affect intensity measure 
+length(which(!is.na(data$ASRM_02))) #adult self-report
+length(which(!is.na(data$YSR_02))) #youth self-report
+length(which(!is.na(data$DBDI_02))) #BDI 
 
 ```
 
